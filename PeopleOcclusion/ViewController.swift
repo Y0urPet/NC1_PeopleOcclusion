@@ -41,11 +41,12 @@ class ViewController: UIViewController {
     }
     
     fileprivate func togglePeopleOcclusion() {
-        guard let config = arView.session.configuration as? ARWorldTrackingConfiguration,
-            ARWorldTrackingConfiguration.supportsFrameSemantics(.personSegmentationWithDepth) else {
-                fatalError("People occlusion is not supported on this device.")
+        guard let config = arView.session.configuration as? ARWorldTrackingConfiguration else {
+            fatalError("Unexpectedly failed to get the configuration.")
         }
-
+        guard ARWorldTrackingConfiguration.supportsFrameSemantics(.personSegmentationWithDepth) else {
+            fatalError("People occlusion is not supported on this device.")
+        }
         switch config.frameSemantics {
         case [.personSegmentationWithDepth]:
             config.frameSemantics.remove(.personSegmentationWithDepth)
@@ -54,7 +55,6 @@ class ViewController: UIViewController {
             config.frameSemantics.insert(.personSegmentationWithDepth)
             messageLabel.displayMessage("People occlusion on", duration: 1.0)
         }
-
         arView.session.run(config)
     }
 }
